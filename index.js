@@ -11,10 +11,6 @@ const app = express();
 // let Heroku set the port
 const port = process.env.PORT || 5000;
 
-app.get('/', (request, response) => {
-  response.json({error: "invalid endpoint bla bla bla"});
-})
-
 app.get('/imagesearch/:term', (request, response) => {
   const searchTerm = request.params.term;
   const page = request.query.offset ? 1 : 0;
@@ -64,6 +60,10 @@ app.get('/latest/imagesearch', (request, response) => {
       response.json(results);
     }
   })
+})
+
+app.use((request, response) => {
+  response.json({error: "Invalid endpoint: use either /latest/imagesearch or /imagesearch/:term[?offset=[pageno]]"});
 })
 
 
