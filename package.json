@@ -5,8 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "4iar",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.10.0"
+  }
 }
