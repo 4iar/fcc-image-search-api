@@ -17,7 +17,7 @@ app.get('/', (request, response) => {
 
 app.get('/imagesearch/:term', (request, response) => {
   const searchTerm = request.params.term;
-  const page = request.query.offset;
+  const page = request.query.offset ? 1 : 0;
 
   const dateObj = new Date();
   const dateStr = dateObj.toISOString();
@@ -36,7 +36,7 @@ app.get('/imagesearch/:term', (request, response) => {
     }
   })
 
-  search.images(searchTerm, {top: 5}, (error, resultsDirty) => {
+  search.images(searchTerm, {top: 5, skip: (5 * page)}, (error, resultsDirty) => {
     const resultsClean = [];
     resultsDirty.forEach((r) => {
       resultsClean.push({
