@@ -17,8 +17,23 @@ app.get('/imagesearch/:term', (request, response) => {
   const searchTerm = request.params.term;
   const page = request.query.offset;
 
-  console.log("search term: " + searchTerm);
-  console.log("page: " + page);
+  const dateObj = new Date();
+  const dateStr = dateObj.toISOString();
+
+  const dbEntry = {
+    term: searchTerm,
+    when: dateStr
+  }
+
+  db.collection('searches').save(dbEntry, (error, result) => {
+    if (result) {
+      console.log("saved result");
+    } else {
+      console.log("couldn't save result");
+    }
+  })
+  
+  response.json({results: []})
 });
 
 app.get('/latest/imagesearch', (request, response) => {
