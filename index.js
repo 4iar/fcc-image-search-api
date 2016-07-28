@@ -21,6 +21,17 @@ app.get('/imagesearch/:term', (request, response) => {
   console.log("page: " + page);
 });
 
+app.get('/latest/imagesearch', (request, response) => {
+  db.collection('searches').find().toArray((error, results) => {
+    if (error) {
+      response.json({error: "could not get recent searches from the database"});
+    } else {
+      response.json(results);
+    }
+  })
+})
+
+
 MongoClient.connect(mongolabUri, (err, database) => {
   if (err) return console.log(err)
   db = database
