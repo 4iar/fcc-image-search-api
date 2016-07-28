@@ -57,7 +57,7 @@ app.get('/imagesearch/:term', (request, response) => {
 });
 
 app.get('/latest/imagesearch', (request, response) => {
-  db.collection('searches').find().limit(5).sort({when: -1}).toArray((error, results) => {
+  db.collection('searches').find(null, {_id: 0, when: 1, term: 1}).limit(5).sort({when: -1}).toArray((error, results) => {
     if (error) {
       response.json({error: "could not get recent searches from the database"});
     } else {
