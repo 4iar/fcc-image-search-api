@@ -1,7 +1,9 @@
 "use strict";
 const express = require('express');
 const mongodb = require('mongodb');
+const Search = require('bing.search');
 
+const search = new Search(process.env.BING_API_KEY);
 const MongoClient = mongodb.MongoClient;
 let db;
 const mongolabUri = process.env.MONGODB_URI;
@@ -25,6 +27,7 @@ app.get('/imagesearch/:term', (request, response) => {
     when: dateStr
   }
 
+
   db.collection('searches').save(dbEntry, (error, result) => {
     if (result) {
       console.log("saved result");
@@ -32,8 +35,25 @@ app.get('/imagesearch/:term', (request, response) => {
       console.log("couldn't save result");
     }
   })
-  
-  response.json({results: []})
+
+  search.images(searchTerm, {top: 5}, (error, resultsDirty) => {
+    const resultsClean = [];
+    resultsDirty.forEach((r) => {
+      resultsClean.push({
+        url: r.url,
+        context: r.sourceUrl,
+        thumbnail: r.thumbnail.url,
+        metadata: {
+          format: r.type,
+          width: r.width,
+          height: r.height,
+          size: r.size
+        }
+      })
+    })
+
+    response.json(resultsClean);
+  });
 });
 
 app.get('/latest/imagesearch', (request, response) => {
